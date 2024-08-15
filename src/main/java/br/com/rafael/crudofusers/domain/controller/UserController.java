@@ -52,6 +52,14 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userEntity);
     }
 
+    @Transactional
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        this.userService.delete(id);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
     private static UserEntity convertEntityToDTO(UserDTO userDTO) {
         return UserEntity.builder()
                 .name(userDTO.getName())

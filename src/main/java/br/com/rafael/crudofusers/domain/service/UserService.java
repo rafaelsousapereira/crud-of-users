@@ -38,5 +38,9 @@ public class UserService {
             this.userRepository.save(userEntity);
         }
     }
+
+    public void delete(UUID id) {
+        this.userRepository.deleteById(id);
+    }
 }
 
