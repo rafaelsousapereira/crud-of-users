@@ -3,6 +3,8 @@ package br.com.rafael.crudofusers.domain.controller;
 import br.com.rafael.crudofusers.domain.dto.UserDTO;
 import br.com.rafael.crudofusers.domain.model.UserEntity;
 import br.com.rafael.crudofusers.domain.service.UserService;
+import jakarta.transaction.Transactional;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Transactional
     @PostMapping("/users")
     public ResponseEntity<UserDTO> create(@RequestBody UserDTO userDTO) {
         var userEntity = convertEntityToDTO(userDTO);
@@ -41,12 +44,20 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
+    @Transactional
+    @PutMapping("/users/{id}")
+    public ResponseEntity<UserEntity> update(@PathVariable UUID id, @RequestBody UserEntity userEntity) {
+        this.userService.update(id, userEntity);
+
+        return ResponseEntity.status(HttpStatus.OK).body(userEntity);
+    }
+
     private static UserEntity convertEntityToDTO(UserDTO userDTO) {
         return UserEntity.builder()
-            .name(userDTO.getName())
-            .username(userDTO.getUsername())
-            .email(userDTO.getEmail())
-            .password(userDTO.getPassword())
-        .build();
+                .name(userDTO.getName())
+                .username(userDTO.getUsername())
+                .email(userDTO.getEmail())
+                .password(userDTO.getPassword())
+                .build();
     }
 }

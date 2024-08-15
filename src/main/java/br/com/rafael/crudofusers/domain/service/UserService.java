@@ -3,7 +3,6 @@ package br.com.rafael.crudofusers.domain.service;
 import br.com.rafael.crudofusers.domain.exception.UserNotFoundException;
 import br.com.rafael.crudofusers.domain.model.UserEntity;
 import br.com.rafael.crudofusers.domain.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +16,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Transactional
+
     public UserEntity create(UserEntity userEntity) {
         return this.userRepository.save(userEntity);
     }
@@ -32,5 +31,12 @@ public class UserService {
         return Optional.of(userId);
     }
 
+    public void update(UUID id, UserEntity userEntity) {
+        var user = this.userRepository.findById(id);
+
+        if (user.isPresent()) {
+            this.userRepository.save(userEntity);
+        }
+    }
 }
 
